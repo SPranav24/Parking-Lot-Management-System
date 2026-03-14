@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center py-4">
+  <div class="col-lg-10">
+    <div class="glass-card p-5 mb-5">
+      <div class="d-flex align-items-center mb-5">
+        <div class="rounded-4 p-3 me-4" style="background: rgba(99, 102, 241, 0.1); color: #818cf8;">
+          <i class="fa-solid fa-screwdriver-wrench fs-2"></i>
+        </div>
+        <div>
+          <h2 class="fw-bold mb-1 text-white">Floor Configuration</h2>
+          <p class="text-white opacity-75 mb-0">Define your parking structure and slot capacity</p>
+        </div>
+      </div>
+      
+      <div class="row g-4 mb-5">
+      <!-- Global Rate Configuration -->
+      <div class="col-md-4">
+        <div class="glass-card p-4 h-100 border-primary-subtle border-opacity-25">
+          <h5 class="fw-bold mb-4 d-flex align-items-center">
+            <i class="fa-solid fa-calculator text-primary me-2"></i> Revenue Config
+          </h5>
+          <form method="post" class="d-flex flex-column gap-3">
+            <input type="hidden" name="action" value="update_rates">
+            <div>
+              <label class="form-label small fw-bold text-white text-uppercase">Car Hourly Rate (₹)</label>
+              <div class="input-group">
+                <span class="input-group-text bg-transparent border-end-0" style="border-color: var(--glass-border);"><i class="fa-solid fa-car text-white opacity-50"></i></span>
+                <input type="number" name="car_rate" class="form-control form-control-premium border-start-0 text-white" value="{{ current_user.car_rate }}" required>
+              </div>
+            </div>
+            <div>
+              <label class="form-label small fw-bold text-white text-uppercase">Bike Hourly Rate (₹)</label>
+              <div class="input-group">
+                <span class="input-group-text bg-transparent border-end-0" style="border-color: var(--glass-border);"><i class="fa-solid fa-motorcycle text-white opacity-50"></i></span>
+                <input type="number" name="bike_rate" class="form-control form-control-premium border-start-0 text-white" value="{{ current_user.bike_rate }}" required>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-premium w-100 py-2 mt-2">
+              <i class="fa-solid fa-save me-2"></i> Update Rates
+            </button>
+          </form>
+          <p class="small text-white opacity-50 mt-3 mb-0">Changes apply immediately to all active and future parking sessions.</p>
+        </div>
+      </div>
+
+      <!-- Add New Floor -->
+      <div class="col-md-8">
+        <div class="glass-card p-4 h-100">
+          <h5 class="fw-bold mb-4 d-flex align-items-center">
+            <i class="fa-solid fa-plus-circle text-primary me-2"></i> Expand Infrastructure
+          </h5>
+          <form method="post" action="/manage_floors">
+            <div class="row g-3">
+              <div class="col-md-3">
+                <label class="form-label small fw-bold text-white text-uppercase">Floor #</label>
+                <input type="number" name="floor_no" class="form-control form-control-premium text-white" placeholder="e.g. 1" required>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label small fw-bold text-white text-uppercase">Car Slots</label>
+                <input type="number" name="car_slots" class="form-control form-control-premium text-white" placeholder="0" min="0">
+              </div>
+              <div class="col-md-3">
+                <label class="form-label small fw-bold text-white text-uppercase">Bike Slots</label>
+                <input type="number" name="bike_slots" class="form-control form-control-premium text-white" placeholder="0" min="0">
+              </div>
+              <div class="col-md-3 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100 py-2">
+                  <i class="fa-solid fa-layer-group me-2"></i> Add Floor
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+      <div class="mt-5 pt-4 border-top" style="border-color: var(--glass-border) !important;">
+        <h4 class="fw-bold mb-4 d-flex align-items-center">
+          <i class="fa-solid fa-table-list text-accent me-2" style="color: var(--accent-color);"></i>
+          Active Infrastructure
+        </h4>
+        <div class="table-responsive rounded-4 overflow-hidden" style="border: 1px solid var(--glass-border);">
+          <table class="table table-dark table-hover mb-0" style="--bs-table-bg: transparent; --bs-table-hover-bg: rgba(255,255,255,0.03);">
+            <thead style="background: rgba(255,255,255,0.05);">
+              <tr>
+                <th class="py-3 px-4 fw-semibold">Floor Designation</th>
+                <th class="py-3 px-4 fw-semibold text-center"><i class="fa-solid fa-car me-2"></i> Car Slots</th>
+                <th class="py-3 px-4 fw-semibold text-center"><i class="fa-solid fa-motorcycle me-2"></i> Bike Slots</th>
+                <th class="py-3 px-4 fw-semibold text-end">Management</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for floor in floors %}
+              <tr>
+                <td class="py-3 px-4"><span class="badge rounded-pill px-3 py-2" style="background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.2); color: #818cf8;">FLOOR {{ floor.floor_no }}</span></td>
+                <td class="py-3 px-4 text-center fw-medium">
+                  {% set ns = namespace(car=0, bike=0) %}
+                  {% for slot in floor.slots %}
+                    {% if slot.vehicle_type == 'CAR' %}{% set ns.car = slot.count %}{% endif %}
+                    {% if slot.vehicle_type == 'BIKE' %}{% set ns.bike = slot.count %}{% endif %}
+                  {% endfor %}
+                  {{ ns.car }}
+                </td>
+                <td class="py-3 px-4 text-center fw-medium">
+                  {{ ns.bike }}
+                </td>
+                <td class="py-3 px-4 text-end">
+                  <form method="POST" action="{{ url_for('delete_floor', floor_id=floor.id) }}" style="display:inline;">
+                    <button type="submit" class="btn btn-sm btn-outline-danger px-3 py-2 rounded-3">
+                      <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                  </form>
+                </td>
+              </tr>
+              {% else %}
+              <tr>
+                <td colspan="4" class="text-center py-5 text-white">
+                  <i class="fa-solid fa-ghost fs-1 mb-3 d-block opacity-25"></i>
+                  No floors configured yet. Use the form above to build your system.
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

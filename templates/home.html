@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+  <div class="col-lg-10">
+    <div class="glass-card p-5 text-center mb-5 overflow-hidden position-relative">
+      <div class="position-absolute top-0 start-0 w-100 h-100" style="background: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.1), transparent 70%);"></div>
+      
+      <h1 class="display-4 fw-bold mb-3 mt-4" style="letter-spacing: -0.02em;">
+        Multi Parking <span style="background: var(--primary-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">System</span>
+      </h1>
+      <p class="text-white opacity-75 fs-5 mb-5 mx-auto" style="max-width: 600px;">
+        A high-performance, realistic parking management solution for modern infrastructure.
+      </p>
+
+      {% if summary %}
+      <div class="row g-4 mb-2 justify-content-center">
+        <div class="col-md-4">
+          <div class="p-4 rounded-4" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);">
+            <div class="fs-1 fw-bold text-primary mb-1">{{ summary.car.free + summary.bike.free }}</div>
+            <div class="text-uppercase small fw-semibold text-white opacity-75">Total Free Slots</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="p-4 rounded-4" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);">
+            <div class="fs-1 fw-bold text-info mb-1">{{ summary.car.occupied + summary.bike.occupied }}</div>
+            <div class="text-uppercase small fw-semibold text-white opacity-75">Currently Occupied</div>
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <div class="alert glass-card border-0 py-4 mb-4" style="background: rgba(99, 102, 241, 0.1);">
+        <i class="fa-solid fa-wand-magic-sparkles mb-2 fs-3 text-primary"></i>
+        <h4 class="fw-bold">Welcome, {{ current_user.username }}</h4>
+        <p class="mb-0">Your parking system is ready. Start by configuring your floors.</p>
+        <a href="/manage_floors" class="btn btn-premium mt-3">Configure Now</a>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-6">
+        <a href="/park" class="glass-card d-block p-4 text-decoration-none h-100 d-flex align-items-center">
+          <div class="rounded-circle p-3 me-4" style="background: rgba(99, 102, 241, 0.1); color: #818cf8;">
+            <i class="fa-solid fa-car-tunnel fs-2"></i>
+          </div>
+          <div>
+            <h4 class="fw-bold text-white mb-1">Park Vehicle</h4>
+            <div class="text-white opacity-50 small">Check-in a car or bike into the system</div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-6">
+        <a href="/exit" class="glass-card d-block p-4 text-decoration-none h-100 d-flex align-items-center">
+          <div class="rounded-circle p-3 me-4" style="background: rgba(168, 85, 247, 0.1); color: #a855f7;">
+            <i class="fa-solid fa-arrow-right-from-bracket fs-2"></i>
+          </div>
+          <div>
+            <h4 class="fw-bold text-white mb-1">Exit Vehicle</h4>
+            <div class="text-white opacity-50 small">Check-out and calculate parking fees</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

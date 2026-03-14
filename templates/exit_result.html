@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center" style="min-height: calc(100vh - 200px);">
+  <div class="col-md-8 col-lg-6 col-xl-5">
+    <div class="glass-card p-5 text-center">
+      {% if ticket %}
+      <div class="rounded-circle d-inline-block p-4 mb-4" style="background: rgba(34, 197, 94, 0.1); color: #22c55e;">
+        <i class="fa-solid fa-receipt fs-1"></i>
+      </div>
+      <h2 class="fw-bold mb-1">Exit Verified</h2>
+      <p class="text-muted mb-5">Billing processed successfully</p>
+
+      <div class="p-4 rounded-4 mb-5 text-start" style="background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border);">
+        <div class="row mb-4">
+          <div class="col-6">
+            <label class="small text-muted text-uppercase fw-bold">Vehicle</label>
+            <div class="fw-bold">{{ ticket.vehicle.number }}</div>
+          </div>
+          <div class="col-6 text-end">
+            <label class="small text-muted text-uppercase fw-bold">Location</label>
+            <div class="fw-bold text-dim">Floor {{ ticket.floor_no }} ({{ ticket.slot.slot_id }})</div>
+          </div>
+        </div>
+        
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <span class="text-muted">Parking Duration</span>
+          <span class="fw-medium">{{ duration }}</span>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <span class="text-muted">Hourly Rate</span>
+          <span class="fw-medium">₹{{ rate_per_hour }}</span>
+        </div>
+        
+        <div class="pt-3 border-top d-flex justify-content-between align-items-center" style="border-color: var(--glass-border) !important;">
+          <h5 class="fw-bold mb-0">Total Due</h5>
+          <h4 class="fw-bold mb-0 text-accent" style="color: var(--accent-color);">₹{{ fee }}</h4>
+        </div>
+      </div>
+      {% else %}
+      <div class="rounded-circle d-inline-block p-4 mb-4" style="background: rgba(239, 68, 68, 0.1); color: #ef4444;">
+        <i class="fa-solid fa-circle-exclamation fs-1"></i>
+      </div>
+      <h2 class="fw-bold mb-1">Exit Failed</h2>
+      <p class="text-muted mb-5">{{ error or "Vehicle not found in active records." }}</p>
+      {% endif %}
+
+      <div class="d-flex gap-3">
+        <a href="/" class="btn btn-outline-premium flex-grow-1 py-3">Home</a>
+        <a href="/exit" class="btn btn-premium flex-grow-1 py-3">{% if ticket %}Exit Another{% else %}Try Again{% endif %}</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

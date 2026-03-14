@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Multi Parking System | Premium Edition</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+      :root {
+        --glass-bg: rgba(18, 18, 30, 0.7);
+        --glass-border: rgba(255, 255, 255, 0.1);
+        --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        --accent-color: #818cf8;
+        --text-dim: #94a3b8;
+        --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      }
+
+      body {
+        font-family: 'Outfit', sans-serif;
+        background: radial-gradient(ellipse at 0% 0%, #1a1c2e 0%, #0a0b16 100%);
+        color: #f8fafc;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* Premium Background Animation */
+      .bg-blob {
+        position: fixed;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, rgba(168, 85, 247, 0.05) 100%);
+        filter: blur(100px);
+        z-index: -1;
+        border-radius: 50%;
+      }
+      .blob-1 { top: -100px; left: -100px; }
+      .blob-2 { bottom: -100px; right: -100px; }
+
+      /* Glassmorphism Classes */
+      .glass-nav {
+        background: rgba(10, 11, 22, 0.8) !important;
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--glass-border);
+      }
+
+      .glass-card {
+        background: var(--glass-bg);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid var(--glass-border);
+        box-shadow: var(--card-shadow);
+        border-radius: 24px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .glass-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 48px 0 rgba(0, 0, 0, 0.5);
+      }
+
+      /* Buttons & Inputs */
+      .btn-premium {
+        background: var(--primary-gradient);
+        border: none;
+        color: white;
+        font-weight: 500;
+        padding: 10px 24px;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+      }
+      .btn-premium:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+        color: white;
+      }
+
+      .btn-outline-premium {
+        background: transparent;
+        border: 1px solid var(--glass-border);
+        color: #f8fafc;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+      }
+      .btn-outline-premium:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: var(--accent-color);
+        color: white;
+      }
+
+      .form-control-premium {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--glass-border);
+        color: white;
+        border-radius: 12px;
+        padding: 12px 16px;
+      }
+      .form-control-premium:focus {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: var(--accent-color);
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        color: white;
+      }
+
+      /* Nav Links */
+      .nav-link-premium {
+        font-weight: 500;
+        color: var(--text-dim);
+        transition: color 0.3s ease;
+        padding: 8px 16px;
+      }
+      .nav-link-premium:hover {
+        color: white;
+      }
+      .nav-link-premium.active {
+        color: var(--accent-color);
+      }
+
+      /* Animations */
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .fade-in { animation: fadeIn 0.6s ease-out forwards; }
+    </style>
+  </head>
+  <body>
+    <!-- Background Elements -->
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark glass-nav sticky-top mb-5">
+      <div class="container">
+        <a class="navbar-brand fw-bold d-flex align-items-center" href="/">
+          <i class="fa-solid fa-square-p text-primary-gradient fs-3 me-2" style="background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+          <span>Multi Parking System</span>
+        </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto align-items-center gap-2 mt-3 mt-lg-0">
+            {% if current_user.is_authenticated %}
+              <li class="nav-item"><a class="nav-link nav-link-premium" href="/"><i class="fa-solid fa-house me-1"></i> Home</a></li>
+              <li class="nav-item"><a class="nav-link nav-link-premium" href="/manage_floors"><i class="fa-solid fa-gears me-1"></i> Config</a></li>
+              <li class="nav-item"><a class="nav-link nav-link-premium" href="/floors"><i class="fa-solid fa-layer-group me-1"></i> Floors</a></li>
+              <li class="nav-item"><a class="nav-link nav-link-premium" href="/search"><i class="fa-solid fa-magnifying-glass me-1"></i> Search</a></li>
+              <li class="nav-item"><a class="nav-link nav-link-premium" href="/dashboard"><i class="fa-solid fa-chart-line me-1"></i> Dashboard</a></li>
+              <li class="nav-item ms-lg-3">
+                <div class="d-flex gap-2">
+                  <a class="btn btn-premium btn-sm px-4" href="/park">Park</a>
+                  <a class="btn btn-outline-premium btn-sm px-4" href="/exit">Exit</a>
+                  <a class="btn btn-danger btn-sm px-3 ms-2" href="/logout"><i class="fa-solid fa-power-off"></i></a>
+                </div>
+              </li>
+            {% else %}
+              <li class="nav-item"><a class="nav-link nav-link-premium" href="/login">Login</a></li>
+              <li class="nav-item ms-lg-2"><a class="btn btn-premium btn-sm px-4" href="/signup">Sign Up</a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container pb-5">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert glass-card border-0 mb-4 fade-in" style="background: rgba(255,255,255,0.05);">
+              <div class="d-flex align-items-center">
+                {% if category == 'success' %}<i class="fa-solid fa-circle-check text-success me-3 fs-4"></i>
+                {% elif category == 'danger' %}<i class="fa-solid fa-circle-xmark text-danger me-3 fs-4"></i>
+                {% else %}<i class="fa-solid fa-circle-info text-info me-3 fs-4"></i>{% endif %}
+                <span class="flex-grow-1">{{ message }}</span>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      
+      <div class="fade-in">
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
+

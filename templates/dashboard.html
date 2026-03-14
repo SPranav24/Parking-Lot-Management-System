@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center py-4 text-white">
+  <style>
+    .text-muted { color: #cbd5e1 !important; }
+    .text-dim { color: #e2e8f0 !important; }
+  </style>
+  <div class="col-lg-11">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-end mb-5 gap-4">
+      <div>
+        <h1 class="fw-bold mb-2">Parking Analytics</h1>
+        <p class="text-muted mb-0">Live infrastructure utilization and revenue tracking</p>
+      </div>
+      <div class="d-flex align-items-center gap-3">
+        <div class="text-end me-2">
+          <div class="small text-muted text-uppercase fw-bold" style="letter-spacing: 0.1em;">Last System Reset</div>
+          <div class="fw-medium text-dim">{{ last_reset_time or "Initializing..." }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Stats -->
+    <div class="row g-4 mb-5">
+      <div class="col-md-3">
+        <div class="glass-card p-4 h-100 overflow-hidden position-relative">
+          <div class="position-absolute top-0 end-0 p-3 opacity-10"><i class="fa-solid fa-layer-group fs-1"></i></div>
+          <div class="small text-muted text-uppercase fw-bold mb-1">Total Capacity</div>
+          <div class="display-5 fw-bold">{{ summary.total_slots if summary else 0 }}</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="glass-card p-4 h-100 overflow-hidden position-relative border-warning-subtle">
+          <div class="position-absolute top-0 end-0 p-3 opacity-10 text-warning"><i class="fa-solid fa-car-on fs-1"></i></div>
+          <div class="small text-muted text-uppercase fw-bold mb-1">Occupied</div>
+          <div class="display-5 fw-bold text-warning">{{ summary.total_occupied if summary else 0 }}</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="glass-card p-4 h-100 overflow-hidden position-relative border-success-subtle">
+          <div class="position-absolute top-0 end-0 p-3 opacity-10 text-success"><i class="fa-solid fa-square-check fs-1"></i></div>
+          <div class="small text-muted text-uppercase fw-bold mb-1">Available</div>
+          <div class="display-5 fw-bold text-success">{{ summary.total_free if summary else 0 }}</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="glass-card p-4 h-100 overflow-hidden position-relative" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);">
+          <div class="position-absolute top-0 end-0 p-3 opacity-20 text-info"><i class="fa-solid fa-indian-rupee-sign fs-1"></i></div>
+          <div class="small text-muted text-uppercase fw-bold mb-1">Total Revenue</div>
+          <div class="display-5 fw-bold text-info">₹{{ summary.total_revenue if summary else 0 }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Breakdown Section -->
+    <div class="row g-4 mb-5">
+      <div class="col-md-6">
+        <div class="glass-card p-4">
+          <h5 class="fw-bold mb-4 d-flex align-items-center">
+            <i class="fa-solid fa-car text-primary me-2"></i> Heavy Vehicle Fleet (Cars)
+          </h5>
+          <div class="d-flex justify-content-between mb-4">
+            <div class="text-center flex-grow-1 border-end" style="border-color: var(--glass-border) !important;">
+              <div class="text-muted small text-uppercase fw-bold">Assigned</div>
+              <div class="fs-4 fw-bold">{{ summary.car.slots if summary and summary.car else 0 }}</div>
+            </div>
+            <div class="text-center flex-grow-1 border-end" style="border-color: var(--glass-border) !important;">
+              <div class="text-muted small text-uppercase fw-bold">Active</div>
+              <div class="fs-4 fw-bold text-warning">{{ summary.car.occupied if summary and summary.car else 0 }}</div>
+            </div>
+            <div class="text-center flex-grow-1">
+              <div class="text-muted small text-uppercase fw-bold">Vacancy</div>
+              <div class="fs-4 fw-bold text-success">{{ summary.car.free if summary and summary.car else 0 }}</div>
+            </div>
+          </div>
+          <div class="progress rounded-pill mb-2" style="height: 6px; background: rgba(255,255,255,0.05);">
+             {% set car_percent = (summary.car.occupied / summary.car.slots * 100) if summary and summary.car and summary.car.slots > 0 else 0 %}
+             <div class="progress-bar bg-primary" role="progressbar" style="width: {{ car_percent }}%"></div>
+          </div>
+          <p class="small text-muted mb-0">High-priority allocations for four-wheeler segments.</p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="glass-card p-4">
+          <h5 class="fw-bold mb-4 d-flex align-items-center">
+            <i class="fa-solid fa-motorcycle text-accent me-2" style="color: var(--accent-color);"></i> Compact Fleet (Bikes)
+          </h5>
+          <div class="d-flex justify-content-between mb-4">
+            <div class="text-center flex-grow-1 border-end" style="border-color: var(--glass-border) !important;">
+              <div class="text-muted small text-uppercase fw-bold">Assigned</div>
+              <div class="fs-4 fw-bold">{{ summary.bike.slots if summary and summary.bike else 0 }}</div>
+            </div>
+            <div class="text-center flex-grow-1 border-end" style="border-color: var(--glass-border) !important;">
+              <div class="text-muted small text-uppercase fw-bold">Active</div>
+              <div class="fs-4 fw-bold text-warning">{{ summary.bike.occupied if summary and summary.bike else 0 }}</div>
+            </div>
+            <div class="text-center flex-grow-1">
+              <div class="text-muted small text-uppercase fw-bold">Vacancy</div>
+              <div class="fs-4 fw-bold text-success">{{ summary.bike.free if summary and summary.bike else 0 }}</div>
+            </div>
+          </div>
+          <div class="progress rounded-pill mb-2" style="height: 6px; background: rgba(255,255,255,0.05);">
+             {% set bike_percent = (summary.bike.occupied / summary.bike.slots * 100) if summary and summary.bike and summary.bike.slots > 0 else 0 %}
+             <div class="progress-bar" role="progressbar" style="width: {{ bike_percent }}%; background: var(--accent-color);"></div>
+          </div>
+          <p class="small text-muted mb-0">High-density packing area optimized for agile transit.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floor Table -->
+    <div class="glass-card overflow-hidden">
+      <div class="p-4 border-bottom d-flex justify-content-between align-items-center" style="border-color: var(--glass-border) !important; background: rgba(255,255,255,0.02);">
+        <h5 class="fw-bold mb-0">Utilization Map</h5>
+        <span class="badge rounded-pill bg-primary px-3 py-2">Total Served: {{ summary.total_vehicles_served if summary else 0 }}</span>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-dark table-hover mb-0" style="--bs-table-bg: transparent;">
+          <thead class="text-muted small text-uppercase fw-bold" style="background: rgba(255,255,255,0.03);">
+            <tr>
+              <th class="py-3 px-4">Floor Designation</th>
+              <th class="py-3 px-4">Capacity</th>
+              <th class="py-3 px-4">Occupied</th>
+              <th class="py-3 px-4">Available</th>
+              <th class="py-3 px-4" style="width: 300px;">Load Factor</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for floor in (summary.floors if summary else []) %}
+            <tr>
+              <td class="py-4 px-4 fw-bold">FLOOR #{{ floor.floor_no }}</td>
+              <td class="py-4 px-4 fs-5">{{ floor.total_slots }}</td>
+              <td class="py-4 px-4 fs-5 text-warning">{{ floor.occupied }}</td>
+              <td class="py-4 px-4 fs-5 text-success">{{ floor.free }}</td>
+              <td class="py-4 px-4">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="progress flex-grow-1 rounded-pill" style="height: 10px; background: rgba(255,255,255,0.05);">
+                    <div class="progress-bar rounded-pill" role="progressbar" 
+                         style="width: {{ floor.occupancy_percent }}%; background: var(--primary-gradient);"></div>
+                  </div>
+                  <span class="small fw-bold text-dim">{{ floor.occupancy_percent }}%</span>
+                </div>
+              </td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="5" class="py-5 text-center text-muted">No infrastructure data available.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

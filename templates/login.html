@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center" style="min-height: calc(100vh - 200px);">
+  <div class="col-md-7 col-lg-5 col-xl-4">
+    <div class="glass-card p-5">
+      <div class="text-center mb-5">
+        <div class="rounded-4 d-inline-block p-3 mb-4" style="background: var(--primary-gradient);">
+          <i class="fa-solid fa-shield-halved fs-2 text-white"></i>
+        </div>
+        <h2 class="fw-bold mb-1">Secure Login</h2>
+        <p class="text-white opacity-75">Enter your admin credentials</p>
+      </div>
+
+      <form method="POST">
+        <div class="mb-4">
+          <label class="form-label small fw-bold text-uppercase text-white opacity-75" style="letter-spacing: 0.1em;">Username</label>
+          <div class="input-group">
+            <span class="input-group-text bg-transparent border-end-0" style="border-radius: 12px 0 0 12px; border-color: var(--glass-border);"><i class="fa-solid fa-user text-white opacity-50"></i></span>
+            <input type="text" class="form-control form-control-premium border-start-0" style="border-radius: 0 12px 12px 0;" name="username" placeholder="Enter username" required>
+          </div>
+        </div>
+        <div class="mb-5">
+          <label class="form-label small fw-bold text-uppercase text-white opacity-75" style="letter-spacing: 0.1em;">Password</label>
+          <div class="input-group">
+            <span class="input-group-text bg-transparent border-end-0" style="border-radius: 12px 0 0 12px; border-color: var(--glass-border);"><i class="fa-solid fa-lock text-white opacity-50"></i></span>
+            <input type="password" class="form-control form-control-premium border-start-0" style="border-radius: 0 12px 12px 0;" name="password" placeholder="••••••••" required>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-premium w-100 py-3 mb-4">
+          <span>Authenticate</span>
+          <i class="fa-solid fa-arrow-right ms-2"></i>
+        </button>
+      </form>
+      
+      <div class="text-center">
+        <span class="text-white opacity-50 small">New system?</span>
+        <a href="/signup" class="text-accent fw-medium ms-2 text-decoration-none" style="color: var(--accent-color);">Create Account</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

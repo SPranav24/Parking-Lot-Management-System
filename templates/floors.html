@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center py-4">
+  <div class="col-lg-11">
+    <div class="mb-5">
+      <h1 class="fw-bold mb-2">Tactical Map</h1>
+      <p class="text-white opacity-75">Real-time visualization of floor occupancy and slot status</p>
+    </div>
+
+    {% for floor in floors %}
+    <div class="glass-card mb-5 overflow-hidden">
+      <div class="px-4 py-3 border-bottom d-flex justify-content-between align-items-center" style="border-color: var(--glass-border) !important; background: rgba(255,255,255,0.02);">
+        <h5 class="fw-bold mb-0 d-flex align-items-center">
+          <i class="fa-solid fa-layer-group text-primary me-2"></i> LEVEL {{ floor.floor_no }}
+        </h5>
+        <div>
+          {% set occupied_count = floor.slots | selectattr('is_free', 'equalto', false) | list | length %}
+          <span class="badge rounded-pill bg-dark border px-3 py-2" style="border-color: var(--glass-border) !important;">
+            {{ occupied_count }} / {{ floor.slots | length }} Occupied
+          </span>
+        </div>
+      </div>
+      <div class="p-4">
+        <div class="d-flex flex-wrap gap-3">
+          {% for slot in floor.slots %}
+          <div 
+            class="d-flex flex-column align-items-center justify-content-center rounded-4 position-relative"
+            style="width: 80px; height: 100px; background: rgba(255,255,255,0.02); border: 1px solid {% if slot.is_free %}rgba(34, 197, 94, 0.2){% else %}rgba(239, 68, 68, 0.2){% endif %}; transition: all 0.3s ease;"
+            title="{% if slot.is_free %}Available{% else %}Occupied by {{ slot.vehicle.number }}{% endif %}"
+          >
+            <div class="small fw-bold mb-1 {% if slot.is_free %}text-success{% else %}text-danger{% endif %}">{{ slot.slot_id }}</div>
+            <i class="fa-solid {% if slot.slot_type == 'CAR' %}fa-car{% else %}fa-motorcycle{% endif %} fs-3 mb-2" 
+               style="opacity: {% if slot.is_free %}0.1{% else %}1{% endif %}; color: {% if slot.is_free %}#94a3b8{% else %}{% if slot.slot_type == 'CAR' %}#818cf8{% else %}#a855f7{% endif %}{% endif %};"></i>
+            
+            {% if not slot.is_free %}
+              <!-- Occupied Indicator -->
+               <div class="position-absolute bottom-0 start-50 translate-middle-x mb-2" style="width: 4px; height: 4px; border-radius: 50%; background: #ef4444; box-shadow: 0 0 10px #ef4444;"></div>
+            {% else %}
+               <!-- Free Indicator -->
+               <div class="position-absolute bottom-0 start-50 translate-middle-x mb-2" style="width: 4px; height: 4px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 10px #22c55e;"></div>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <div class="glass-card p-5 text-center text-white opacity-75">
+       <i class="fa-solid fa-map-location-dot fs-1 mb-3 opacity-25"></i>
+       <p class="mb-0">No tactical data available. Configure floors to generate map.</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

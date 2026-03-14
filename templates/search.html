@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center py-4">
+  <div class="col-lg-10">
+    <div class="glass-card p-5 mb-5 overflow-hidden position-relative">
+      <div class="position-absolute top-0 end-0 p-5 opacity-10"><i class="fa-solid fa-magnifying-glass fs-1"></i></div>
+      
+      <h2 class="fw-bold mb-2">Vehicle Locator</h2>
+      <p class="text-white opacity-75 mb-5">Audit vehicle records and active parking status</p>
+
+      <form method="post" class="row g-3 align-items-end">
+        <div class="col-md-9">
+          <label class="form-label small fw-bold text-uppercase text-white opacity-75 px-2" style="letter-spacing: 0.1em;">License Plate / ID</label>
+          <div class="input-group">
+            <span class="input-group-text bg-transparent border-end-0" style="border-radius: 12px 0 0 12px; border-color: var(--glass-border);"><i class="fa-solid fa-fingerprint text-white opacity-50"></i></span>
+            <input type="text" name="vehicle_number" class="form-control form-control-premium border-start-0" style="border-radius: 0 12px 12px 0;" placeholder="e.g. KA01AB1234" value="{{ vehicle_number or '' }}" required autofocus>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <button type="submit" class="btn btn-premium w-100 py-3">
+            <i class="fa-solid fa-search me-2"></i> Query Record
+          </button>
+        </div>
+      </form>
+    </div>
+
+    {% if vehicle_number is not none %}
+    <div class="row g-4 mb-5">
+      <div class="col-md-5">
+        <div class="glass-card p-4 h-100">
+          <h5 class="fw-bold mb-4 d-flex align-items-center">
+            <i class="fa-solid fa-satellite-dish text-primary me-2"></i> Current Status
+          </h5>
+          {% if active_records %}
+            <div class="alert bg-success bg-opacity-10 border-success border-opacity-25 text-success rounded-4 p-4">
+               <div class="d-flex align-items-center mb-3">
+                 <i class="fa-solid fa-location-dot fs-3 me-3"></i>
+                 <div>
+                   <div class="small text-uppercase fw-bold opacity-75">Active Session</div>
+                   <div class="fw-bold">Currently Parked</div>
+                 </div>
+               </div>
+               {% for r in active_records %}
+               <div class="ps-5">
+                 <div class="fw-medium">LEVEL {{ r.floor_no }} · SPOT {{ r.slot_id }}</div>
+                 <div class="small opacity-75">{{ r.vehicle_type }} Classification</div>
+               </div>
+               {% endfor %}
+            </div>
+          {% else %}
+            <div class="alert bg-secondary bg-opacity-10 border-white border-opacity-10 text-muted rounded-4 p-4">
+               <div class="d-flex align-items-center">
+                 <i class="fa-solid fa-circle-minus fs-3 me-3"></i>
+                 <div>
+                   <div class="small text-uppercase fw-bold opacity-75">Status</div>
+                   <div class="fw-bold">Not in System</div>
+                 </div>
+               </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+      
+      <div class="col-md-7">
+        <div class="glass-card p-4 h-100">
+          <h5 class="fw-bold mb-4 d-flex align-items-center">
+            <i class="fa-solid fa-clock-rotate-left text-accent me-2" style="color: var(--accent-color);"></i> Transit History
+          </h5>
+          {% if history_records %}
+            <div class="table-responsive rounded-4 border overflow-hidden" style="border-color: var(--glass-border) !important;">
+              <table class="table table-dark table-hover mb-0" style="--bs-table-bg: transparent; font-size: 0.9rem;">
+                <thead style="background: rgba(255,255,255,0.03);">
+                  <tr>
+                    <th class="py-3 px-3">Timeline</th>
+                    <th class="py-3 px-3">Location</th>
+                    <th class="py-3 px-3 text-end">Fee</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for r in history_records %}
+                  <tr>
+                    <td class="py-3 px-3">
+                      <div class="fw-bold text-success">{{ r.entry_time | datetimeformat }}</div>
+                      <div class="text-white opacity-50 small">Checked out: {{ r.exit_time | datetimeformat or 'Active' }}</div>
+                    </td>
+                    <td class="py-3 px-3">
+                       <span class="badge bg-dark border" style="border-color: var(--glass-border) !important;">L{{ r.floor_no }} · {{ r.slot_id }}</span>
+                    </td>
+                    <td class="py-3 px-3 text-end fw-bold">₹{{ r.fee }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <div class="text-center py-5 text-white opacity-50">
+               <i class="fa-solid fa-folder-open fs-1 mb-2"></i>
+               <p class="mb-0">No archived records found.</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

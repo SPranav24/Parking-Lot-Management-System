@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center" style="min-height: calc(100vh - 200px);">
+  <div class="col-md-7 col-lg-5 col-xl-4">
+    <div class="glass-card p-5">
+      <div class="text-center mb-5">
+        <div class="rounded-circle d-inline-block p-3 mb-4" style="background: rgba(168, 85, 247, 0.2); color: #a855f7;">
+          <i class="fa-solid fa-user-plus fs-2"></i>
+        </div>
+        <h2 class="fw-bold mb-1">Get Started</h2>
+        <p class="text-white opacity-75">Create your admin workspace</p>
+      </div>
+
+      <form method="POST">
+        <div class="mb-4">
+          <label class="form-label small fw-bold text-uppercase text-white opacity-75" style="letter-spacing: 0.1em;">Admin Username</label>
+          <div class="input-group">
+            <span class="input-group-text bg-transparent border-end-0" style="border-radius: 12px 0 0 12px; border-color: var(--glass-border);"><i class="fa-solid fa-user-shield text-white opacity-50"></i></span>
+            <input type="text" class="form-control form-control-premium border-start-0" style="border-radius: 0 12px 12px 0;" name="username" placeholder="e.g. system_admin" required>
+          </div>
+        </div>
+        <div class="mb-5">
+          <label class="form-label small fw-bold text-uppercase text-white opacity-75" style="letter-spacing: 0.1em;">Secure Password</label>
+          <div class="input-group">
+            <span class="input-group-text bg-transparent border-end-0" style="border-radius: 12px 0 0 12px; border-color: var(--glass-border);"><i class="fa-solid fa-key text-white opacity-50"></i></span>
+            <input type="password" class="form-control form-control-premium border-start-0" style="border-radius: 0 12px 12px 0;" name="password" placeholder="Min. 8 characters" required>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-premium w-100 py-3 mb-4">
+          <span>Create Workspace</span>
+          <i class="fa-solid fa-rocket ms-2"></i>
+        </button>
+      </form>
+      
+      <div class="text-center">
+        <span class="text-white opacity-50 small">Already registered?</span>
+        <a href="/login" class="text-accent fw-medium ms-2 text-decoration-none" style="color: var(--accent-color);">Sign In</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
