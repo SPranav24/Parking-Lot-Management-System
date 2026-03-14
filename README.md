@@ -54,6 +54,10 @@ python app.py
 *The server will start up. You can view the app in your browser at `http://127.0.0.1:5000`*
 
 ---
+🌐 Live Demo
+
+🔗 Try the deployed application:
+https://parking-lot-management-system-l3uv.onrender.com/
 
 ## ☁️ Deployment Guide (Render)
 
