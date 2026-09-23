@@ -38,4 +38,5 @@ jobs:
 
       - name: Run Postman tests
         run: |
-          newman run postman/Smart-Parking-Regression-Suite.postman_collection.json
+          newman run "postman/Smart Parking system.postman_collection.json"
+        
